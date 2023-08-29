@@ -106,6 +106,14 @@ module "cloudfront_log_bucket" {
   force_destroy = true
 }
 
+module "simple_bucket" {
+  source = "../../"
+
+  bucket = "simple-${random_pet.this.id}"
+
+  force_destroy = true
+}
+
 module "s3_bucket" {
   source = "../../"
 
@@ -137,6 +145,8 @@ module "s3_bucket" {
   attach_deny_insecure_transport_policy    = true
   attach_require_latest_tls_policy         = true
   attach_deny_incorrect_encryption_headers = true
+  attach_deny_incorrect_kms_key_sse        = true
+  allowed_kms_key_arn                      = aws_kms_key.objects.arn
   attach_deny_unencrypted_object_uploads   = true
 
   # S3 bucket-level Public Access Block configuration (by default now AWS has made this default as true for S3 bucket-level block public access)
